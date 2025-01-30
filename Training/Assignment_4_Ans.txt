@@ -1,0 +1,76 @@
+1. Metadata management is done by which layer of snowflake? 
+	Cloud Service Layer
+
+2. What is a virtual warehouse in snowflake?
+	The computing unit to process queries and jobs using multiple nodes (clusters) and can be resized, auto resumed and auto stopped.
+	A user will be charged according to the size and usage of a VM.
+
+3. How can you decide your virtual warehouse size and number of clusters?
+	Virtual warehouse size is decided upon the complexity of the query and the amount of data to be porcessed for query porcessing. 
+	If the VW is taking more time to process a query then its need to be resized accordingly. This process is called Scaling Up. 
+	Increasing or decreasing the number of clusters depends on the number of queries a VW received for processing. If all the compute nodes of a VM are busying processing some queries and some other queries come they need to be queued unless the number of clusters increases.
+	This is called scaling out.
+
+4. If I am using 'M' size virtaual warehouse with 5 clusters, howmany credits will be consumed for an hour?
+	With 4 credits/hour for 'M' size VM, for 5 clusters 5 * 4 = 20 credits/hour will be consumed.
+
+We have a file in AWS with name 'Employee_Data.csv' and below is the first line of the file.
+empid|first_name|last_name|salary|location|DOB
+
+5. Write a copy query just to fetch empid and Full_Name(Combination of first name and last name).
+6. Write the query to create file format object for above file.
+7. Write a query to create a stage object for accessing above file by using storege integration object 'nic_aws_si'.
+8. Write a query to process all employee files located in aws in 'nics3bucket' in input/csv/ folder.
+9. Write a copy query to load the data by ignoring the errors and also query should not fail if the column length exceeds the filed length in the table.
+10. Write a query to calculate the age of the employees in years based on his DOB (Try in google for date functions).
+
+For 5-10 Questions:
+
+// Create storage integration object
+create or replace storage integration nic_aws_si
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = S3
+  ENABLED = TRUE 
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::555064756008:role/snowflake_access_role'
+  STORAGE_ALLOWED_LOCATIONS = ('s3://nics3bucket/input/csv/')
+  COMMENT = 'Access to my s3 buckets' ;
+  
+
+// Create file format object
+CREATE OR REPLACE file format myown_db.file_formats.csv_fileformat
+    type = csv
+    field_delimiter = ','
+    skip_header = 1
+    empty_field_as_null = TRUE;
+    
+    
+// Create stage object with integration object & file format object
+CREATE OR REPLACE stage myown_db.external_stages.aws_s3_csv
+    URL = 's3://nics3bucket/input/csv/'
+    STORAGE_INTEGRATION = nic_aws_si
+    FILE_FORMAT = myown_db.file_formats.csv_fileformat ;
+
+
+// Create a table first
+CREATE OR REPLACE TABLE myown_db.public.Employee_data (
+EmployeeId NUMBER,
+FullName VARCHAR(50),
+DOB Date
+); 
+
+// Use Copy command to load the files
+COPY INTO myown_db.public.Employee_data
+    FROM(select 
+            s.$1,
+            s.$2|| ' ' || s.$3,
+            s.$6
+          FROM @MYOWN_DB.external_stages.aws_s3_csv s)
+    PATTERN = '.*employee.*'
+    TRUNCATECOLUMNS = TRUE
+    ON_ERROR =CONTINUE; 
+    
+//Validate the data
+select EmployeeId, FullName, 
+        DateDiff(year, DOB, current_date()) as Age
+ FROM myown_db.public.Employee_data; 
+

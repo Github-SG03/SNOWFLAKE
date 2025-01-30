@@ -1,0 +1,97 @@
+1. Whcih type of storage is used in snowflake and where the data stored internally?
+	Snowflake stores data in cloud in micro partitions that are internally compressed and optimized
+	to stores data in columnar format. Micro partitions are physical storage unit of size ranges from 50-500 MB.
+	Snowflake uses metadata (data about a table) for fast retrival of data. When a query is executed instead of visiting all partitions, the metadata determines which micro partitions to visit to get the data.
+
+2. What fields you can choose as cluster keys for a table in snowflake?
+	column(s) used mostly in where clause of select statement and fields used as join keys
+
+3. Write the syntax to specify cluster keys for a table.
+	1. While creating a table
+		CREATE TABLE <Table_Name> (<Column_name> DATA_Type,
+						 	<Column_name> DATA_Type,
+							...)
+		CLUSTER BY (<Column_name(s)>);
+
+	2. In any existing table:
+		ALTER TABLE <Table_Name>
+		CLUSTER BY (<Column_name(s)>);
+
+
+4. What are the storage plans available in Snowflake?
+	Snowflake has 2 storage plans:
+	1. On Demand Storage - This is a fexible plan in which pay as you use model is implemented. Customer are charged at a fixed rate of $4o/TB per month. 
+	   This type of plan is generally used during the initial phase of any project when the customer is not sure of his total storage needs. 
+	2. Capacity or Fixed storage - This is pre purchased plan in which some fixed storage is purchased from Snowflake by the customer. The charges are $23/TB per month.
+
+5. Write a copy command to process below JSON file data. file_name 'languages.json'
+	{
+		"name":"Krishna",
+		"gender":"Male",
+		"languages":["English","Telugu","Hindi"],
+		"Phone":{
+					"Work": 123456789,
+					"Mobile": 987654321
+				}
+	  }
+
+	//Create a named stage
+	CREATE OR REPLACE STAGE myown_db.public.named_stage;
+
+	//Put your files into named internal stage
+	put file://C:\Users\Files\languages.json @myown_db.public.named_stage;
+	
+	//create File format
+	create or replace file format json_format type = 'json';
+
+	--Creating Stage Table to store RAW Data	
+	CREATE OR REPLACE Temporary TABLE MYOWN_DB.public.Languages_Raw
+	(Person variant);
+
+
+	--Copy the RAW data into a Stage Table
+	COPY INTO MYOWN_DB.public.Languages_Raw 
+    FROM myown_db.public.named_stage/languages.json
+    file_format= json_format;
+
+	create or replace table myown_db.public.EMPLOYEE as
+	select  
+       Person:name::string as Name,
+       Person:gender::string as Gender,
+       f1.value::string as Language,
+	  Person:Phone.Work::number as Work_Phone,
+	  Person:Phone.Mobile::number as Mobile_Phone
+	FROM MYOWN_DB.public.Languages_Raw , 
+	table(flatten(Person:Languages)) f1;
+
+select * from myown_db.public.EMPLOYEE;
+
+6. What is the diff between external stage and internal stage?
+	Snowflake use stages(database object created in a schema) to store data. There are two type of stages:
+	1.External Stage - External stage is the storage space present outside the snowflake environment in any of the 3 cloud providers. 
+			A storage integration object is created to store the settings (ARN, URL, etc) of the cloud provider. 
+	Internal Stage -Internal stage is the storage space inside the snowflake environment where before copying the data into tables, files are uploaded first from local disk/machine using SnowSql. 
+			There are three types of internal stages:
+			1. User Internal Stage associated with a particular snowflake user
+			2. Table Internal Stage associated with any table in snowflake database
+			3. Named Internal Stage where any number of user(s) can store files for any number of table(s)
+
+	2. Internal stage copy is faster as the file is present in the local storage space whereas in external stage the files can be present in any other region geographically.
+	3.External stage are costlier as cloud providers charge for the storage space across regions whereas for internal stage a minimal cost is applied.
+	4.An external software SnowSQL is required to put files in internal stage whereas in external stage the user has to just upload the file.
+	5.In exteranl stage the uploaded file after use can be archived on the provider side whereas in internal stage case the file after use is deleted.
+
+7. What are the external stages supported by snowflake? (Which cloud providers)
+	Snowflake supports all the three cloud providers as external storage:
+		-Amazon Web Services
+		-Microsoft Azure
+		-Google Cloud Platform
+
+8. Write a command to push a file from loacl system to user stage in snowflake.
+	put file://<file path> @~/staged;
+
+9. Write a query to create to list all files under the table stage for table 'ORDER_DTL'
+	list @%ORDER_DTL;
+
+10. Write a query to create named internal stage object.
+	CREATE OR REPLACE STAGE <Database Name>.<Schema Name>.<Stage Name>;
