@@ -1,0 +1,30 @@
+[0m23:56:46.194575 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001C15F60DD30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001C15D7E4E10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001C16074FED0>]}
+
+
+============================== 23:56:46.202157 | 846626a9-99f5-4c77-a7af-a9e9d291a702 ==============================
+[0m23:56:46.202157 [info ] [MainThread]: Running with dbt=1.9.2
+[0m23:56:46.203493 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'profiles_dir': 'C:\\Users\\Shivam Gupta\\.dbt', 'log_path': 'logs', 'fail_fast': 'False', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'log_format': 'default', 'invocation_command': 'dbt init', 'introspect': 'True', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m23:57:22.151982 [debug] [MainThread]: Starter project path: C:\Users\Shivam Gupta\AppData\Local\Programs\Python\Python313\Lib\site-packages\dbt\include\starter_project
+[0m23:57:22.189389 [info ] [MainThread]: 
+Your new dbt project "dbt_snowflake_airflow_pipeline" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m23:57:22.190758 [info ] [MainThread]: Setting up your profile.
+[0m00:04:19.738403 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020321F6DD30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000020320144E10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000203230BFED0>]}
+
+
+============================== 00:04:19.744851 | a5b8d3b4-3d5b-469e-8704-b103b7c39a74 ==============================
+[0m00:04:19.744851 [info ] [MainThread]: Running with dbt=1.9.2
+[0m00:04:19.745846 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': 'C:\\Users\\Shivam Gupta\\.dbt', 'debug': 'False', 'warn_error': 'None', 'log_path': 'logs', 'version_check': 'True', 'fail_fast': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt init', 'static_parser': 'True', 'log_format': 'default', 'target_path': 'None', 'introspect': 'True', 'send_anonymous_usage_stats': 'True'}

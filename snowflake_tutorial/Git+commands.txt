@@ -1,0 +1,34 @@
+Git Commands:
+
+1) To initialize/start git
+	git init
+
+2) To clone the repository(to make copy of the repository to our local machine & perform all the operation from this loaction onwards)
+	git clone <repo-link>//https://github.com/Github-SG03/SF_2024
+
+3) To switch to other branch if needed(you need to first check in which branch you already present--git branch & if we have to login to other branch then--git checkout <branch_name>)
+	git checkout dev
+
+-- Now add/modify the content from any IDE or Desktop
+
+4) To view all the uncommitted changes(to find list of files get modified(if any) like addition, deletion etc)
+	git status
+
+5) To add the changes after adding/modifying the content in the modified files
+	git add .
+	
+6) To commit the changes
+	git commit -m "Comments"
+	
+7) To push the changes to Github(from local machine)
+	git push -- by default it pushesh the changes to the branch we are currently in
+	git push <branch-name> -- To push the changes to specified branch
+	
+8) To merge the changes to main/master branch 
+   git merge main/master 
+   
+(In genearl we may not have access to merge to main/master branch directly, so we have to create a pull request and get it approved by the lead or the one who has approval permission and then merge it to main/master branch)
+(so these are the commands we need to know before deploying the github changes to git repository/to work with github )
+	
+$git config --global user.email "sgs.shivam99@outlook.com"
+$git config --global user.name "LAPTOP-2CRA05LG"

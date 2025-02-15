@@ -1,0 +1,64 @@
+1. What are the minimum and the maximum number of clusters in a multi-cluster warehouse?
+A. Minimum: 1, Maximum: 99
+B. Minimum: 1, Maximum: 100
+C. Minimum: 1, Maximum: 10
+D. Minimum: 1, Maximum: unlimited
+
+2. Snowflake account should be hosted on one of the cloud platforms Amazon/Azure/Google
+A.TRUE
+B.FALSE
+
+3. If you log out of Snowflake, any active queries stop running?
+A.FALSE
+B.TRUE
+
+4. Command to see the files present under the external stage
+A.SHOW
+B.LIST
+C.DESC
+D.SHOW STAGE
+
+5. Snowflake supports Indexes True or Fales?
+A.TRUE
+B.FALSE
+
+6. Snowflake suggests defining maximum ___ cluster keys.
+A.1
+B.2
+C.4
+D.8
+
+7. When your data volume increased ____ will help in improving the performance.
+A.Scale Down
+B.Scale UP
+C.Scale In
+D.Scale Out
+
+8. We can create Databases from Snowflake Web user interface
+A.FALSE
+B.TRUE
+
+9. Which object contains SKIP_HEADER file property
+A.Internal Stage
+B.External Stage
+C.Named Stage
+D.File format object
+
+10. Which of the below is not a tab in Snowflake Web UI
+A.Databses
+B.Tables
+C.Warehouses
+D.Worksheets
+
+11. Which of the following are options when creating a Virtual Warehouse? (Choose two.)
+A.Auto-drop
+B.Auto-resize
+C.Auto-resume
+D.Auto-suspend
+
+12. Command used to load files from internal stages to Snowflake
+A.PUT
+B.COPY
+C.LOAD
+D.INSERT
+

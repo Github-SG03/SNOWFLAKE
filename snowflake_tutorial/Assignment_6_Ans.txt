@@ -1,0 +1,81 @@
+1. How do we do continuous loading in snowflake?
+	By using SnowPipes
+
+2. Write a query to create snowpipe named 'amazonpipe' to load the files from 'aws/pipes' folder
+
+    CREATE OR REPLACE file format myown_db.public.csv_fileformat
+    type = csv
+    field_delimiter = ','
+    skip_header = 1
+    empty_field_as_null = TRUE;
+
+  create or replace storage integration s3_int
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = S3
+  ENABLED = TRUE 
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::555064756008:role/snowflake_access_role'
+  STORAGE_ALLOWED_LOCATIONS = ('s3://aws/pipes', 's3://aws/json/','s3://aws/csv/')
+  COMMENT = 'Access to my s3 buckets' ;
+
+  CREATE OR REPLACE stage myown_db.public.stage_aws_pipes
+    URL = 's3://aws/pipes/'
+    STORAGE_INTEGRATION = s3_int
+    FILE_FORMAT = myown_db.public.csv_fileformat;
+
+CREATE OR REPLACE TABLE myown_db.public.Person
+(
+  id INT,
+  first_name STRING,
+  last_name STRING,
+  email STRING,
+  phone number
+);
+
+// Create a pipe
+CREATE OR REPLACE pipe myown_db.public.Person_pipe
+auto_ingest = TRUE
+AS
+COPY INTO myown_db.public.Person
+FROM @myown_db.public.stage_aws_pipes;
+
+
+3. How to pause snowpipe execution?
+	ALTER PIPE myown_db.public.Person_pipe SET PIPE_EXECUTION_PAUSED = true;
+
+4. Explain about caching in snowflake? howmany types and what is the advantage?
+   Snowflake uses data cache as well as result cache in different layers for sql query performance.
+   there are 3 types of cache in snowflake:
+ 1. Result Cache: This cache holds the result of every query executed in next 24 hours.This is for fast retrival of data for the next time the same query is executed.
+    This can greatly reduce the query time.These result sets are available across VMs.
+ 2. Local Disk Cache:This cache stores data used by SQl queries. Whenever data is needed for a given query it is retrieved from the remote disk and stored in this layer.
+ 3. Remote Disk:THis is the storage layer of snowflake. It stores the data for long term.
+ 
+5. What is the retention period in snowflake and what is the retention period of Transient tables?
+	Retention period is the number of days for which the historical data (changed or deleted data) is preserved. 
+	Deafult value of retention period is 1 which can extend to 90 days for Enterprise edition of snowflake. Higher the retention period, higher is the cost.
+	Transient tables has 1 day retention period.
+
+6. I have 1000 records in a table, by mistake I have deleted 200 records from the table. After 1 day I realized I need those deleted records. Write a query to to display only those 200 deleted records. I dont want to see all 1000 records. (Take google help if needed)
+	SELECT * FROM <table_name> AT(timestamp => (select dateadd(hour,-24,current_timestamp())))
+	MINUS
+	SELECT * FROM <table_name>
+   
+7. Write a query to clone entire schema named 'STAGING_TABLES'
+	CREATE SCHEMA myown_db.Stg_Tbl_Cln
+      CLONE myown_db.STAGING_TABLES;
+
+8. Tell me one realtime use case where Cloning is useful
+	1.for database backups
+   	2.for moving data from production to development environment for tesing purpose.
+
+9. What is the purpose of creating Transient tables in snowflake?
+	Transient tables are used for data that can be maintained even after a session ends but no need to maintain the data for long time. 
+	stage tables are good examples of transient tables.
+ 
+10. What are the storage types available in snowflake and how can we choose storage type for our project?
+	There are 2 types of storage:
+	1.On Demand 
+	2.Capacity Usage
+
+     In the intial phase of a project when the customer is not sure about the amount of storage requried,ON Demand storage is used.
+     once the application storage requirement is understood, an appropriately sized Capacity purchase can be made.

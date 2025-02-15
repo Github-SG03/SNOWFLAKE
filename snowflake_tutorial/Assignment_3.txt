@@ -1,0 +1,19 @@
+================================
+Assignment 3: Loading JSON file
+================================
+1. Load JSON file from Amazon S3 to Snowflake table by using below steps
+	a.Take this file from 1 drive and upload it to your s3 bucket 
+		File: 4Wheelers.json
+	b.Create a table with below structure
+	c.Create file format object and stage object pointing to file in s3 bucket
+	d.Create copy command and run and load the data
+	e.Tell me howmany records loaded to the table
+	f.Upload your queries file Assignments folder
+	
+Create or replace table myown_db.public.owner (
+    car_model varchar, 
+    car_model_year int,
+    car_make varchar, 
+    first_name varchar,
+    last_name varchar);	
+	
