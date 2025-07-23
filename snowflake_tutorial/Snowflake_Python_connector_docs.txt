@@ -1,0 +1,5 @@
+Step 1: Install Anaconda3 for Python from google
+Step 2: Install Snowflake connector for Python, run below command from cmd prompt
+ pip install snowflake-connector-python==3.0.0
+Step 3: Import that connector in your python program
+Step 4: Use snowflake.connector.connect to connect to your snowflake account.

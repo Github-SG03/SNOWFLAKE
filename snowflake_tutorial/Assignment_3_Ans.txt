@@ -1,0 +1,57 @@
+--Creating required schemas
+CREATE OR REPLACE SCHEMA MYOWN_DB.external_stages;
+CREATE OR REPLACE SCHEMA MYOWN_DB.STAGE_TBLS;
+
+--Creating file format object
+CREATE OR REPLACE FILE FORMAT MYOWN_DB.file_formats.FILE_FORMAT_JSON
+	TYPE = JSON;
+
+create or replace storage integration s3_int
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = S3
+  ENABLED = TRUE 
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::038998040061:role/snowflake_access_role'
+  STORAGE_ALLOWED_LOCATIONS = ('s3://awss3bucket/csv/', 's3://awss3bucket/json/','s3://awss3bucket/pipes/csv/')
+  COMMENT = 'Access to my s3 buckets' ;
+
+--Creating stage object
+CREATE OR REPLACE STAGE MYOWN_DB.external_stages.STAGE_JSON
+    STORAGE_INTEGRATION = s3_int
+    URL = 's3://awss3bucket/json/';
+
+--Listing files in the stage
+LIST @MYOWN_DB.external_stages.STAGE_JSON;
+
+--Creating Stage Table to store RAW Data	
+CREATE OR REPLACE TABLE MYOWN_DB.STAGE_TBLS.CarModels_JSON_RAW 
+(raw_file variant);
+
+
+--Copy the RAW data into a Stage Table
+COPY INTO MYOWN_DB.STAGE_TBLS.CarModels_JSON_RAW 
+    FROM @MYOWN_DB.external_stages.STAGE_JSON
+    file_format= MYOWN_DB.file_formats.FILE_FORMAT_JSON
+    FILES=('CarModels.json');
+
+--View RAW table data
+SELECT * FROM MYOWN_DB.STAGE_TBLS.CarModels_JSON_RAW;
+
+Create or replace table myown_db.public.car_owner (
+    car_model varchar, 
+    car_model_year int,
+    car_make varchar, 
+    first_name varchar,
+    last_name varchar);	
+
+INSERT INTO myown_db.public.car_owner
+select  
+       raw_file:"Car Model"::string as Car_Model,
+       raw_file:"Car Model Year"::number as Car_Model_Year,
+       raw_file:"car make"::string as Car_Make,
+       raw_file:first_name::string as First_Name,
+       raw_file:last_name::string as Last_Name
+FROM MYOWN_DB.STAGE_TBLS.CarModels_JSON_RAW
+
+
+--Viewing final data
+SELECT * from myown_db.public.car_owner;--324 rows

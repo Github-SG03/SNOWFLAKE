@@ -1,0 +1,47 @@
+=====================================================
+Assignment2: Loading data from Amazon S3 to Snowflake
+=====================================================
+1. Load the Data from Amazon S3 to Snowflake table by using below steps
+	a.Take this file from 1 drive and upload it to your s3 bucket 
+		File: streaming_data.csv
+	b.Create a table with below structure
+	c.Create file format object and stage object pointing to file in s3 bucket
+	d.Create copy command and run and load the data
+	e.Tell me howmany records loaded to the table
+	f.Upload your queries file Assignments folder
+	
+CREATE OR REPLACE TABLE myown_db.public.movies (
+  show_id STRING,
+  type STRING,
+  title STRING,
+  director STRING,
+  cast STRING,
+  country STRING,
+  date_added STRING,
+  release_year STRING,
+  rating STRING,
+  duration STRING,
+  listed_in STRING,
+  description STRING );
+  
+// Create file format object
+CREATE OR REPLACE file format myown_db.file_formats.csv_fileformat
+    type = csv
+    field_delimiter = ','
+    skip_header = 1
+    null_if = ('NULL','null')
+    empty_field_as_null = TRUE    
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"' ;   
+	
+2. Load the data from User internal stage to snowflake tables
+	a.Take this file from 1 drive and put it to your internal stage using Snowsql
+		File: customer_data_2021.csv
+	b.Create customer_data table in snowflake
+	c.Create file format object
+	d.Create copy command and run and load the data, handle if any errors
+	e.Tell me howmany records loaded to the table
+	f.Upload your queries file Assignments folder
+	
+	
+	
+	
